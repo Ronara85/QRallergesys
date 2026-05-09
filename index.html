@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Allergen Product Viewer</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      background:#f5f5f5;
+      padding:20px;
+    }
+
+    .card{
+      max-width:500px;
+      margin:auto;
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      margin-bottom:15px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:20px;
+      margin:5px;
+      background:#fee2e2;
+      color:red;
+    }
+
+  </style>
+
+</head>
+<body>
+
+<div class="card">
+
+  <h1 id="name"></h1>
+
+  <h3>Ingredients</h3>
+  <p id="ingredients"></p>
+
+  <h3>Allergens</h3>
+  <div id="allergens"></div>
+
+  <h3>Warning</h3>
+  <p id="warning"></p>
+
+</div>
+
+<script>
+
+const products = {
+
+  "12345":{
+    name:"Chocolate Biscuit",
+    ingredients:"Milk, Wheat, Sugar",
+    allergens:["Milk","Gluten"],
+    warning:"Contains Milk & Gluten"
+  },
+
+  "67890":{
+    name:"Peanut Cookies",
+    ingredients:"Peanut, Butter, Wheat",
+    allergens:["Peanut","Gluten"],
+    warning:"Danger for peanut allergy"
+  }
+
+};
+
+// URL eke id ganna
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id");
+
+const product = products[id];
+
+if(product){
+
+  document.getElementById("name").innerText =
+    product.name;
+
+  document.getElementById("ingredients").innerText =
+    product.ingredients;
+
+  document.getElementById("warning").innerText =
+    product.warning;
+
+  let html = "";
+
+  product.allergens.forEach(item=>{
+
+    html += `
+      <span class="badge">
+        ⚠️ ${item}
+      </span>
+    `;
+
+  });
+
+  document.getElementById("allergens").innerHTML =
+    html;
+
+}else{
+
+  document.body.innerHTML =
+    "<h1>Product Not Found</h1>";
+
+}
+
+</script>
+
+</body>
+</html>
