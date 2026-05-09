@@ -21,19 +21,27 @@
       padding:20px;
       border-radius:15px;
       box-shadow:0 5px 15px rgba(0,0,0,0.1);
+      text-align:center;
     }
 
     h1{
       margin-bottom:15px;
     }
 
-    .badge{
+    .icon-box{
       display:inline-block;
-      padding:8px 12px;
-      border-radius:20px;
-      margin:5px;
+      width:90px;
+      margin:10px;
+      padding:15px;
+      border-radius:15px;
       background:#fee2e2;
+      font-size:40px;
+    }
+
+    .warning{
       color:red;
+      font-weight:bold;
+      margin-top:15px;
     }
 
   </style>
@@ -52,7 +60,7 @@
   <div id="allergens"></div>
 
   <h3>Warning</h3>
-  <p id="warning"></p>
+  <p class="warning" id="warning"></p>
 
 </div>
 
@@ -63,16 +71,27 @@ const products = {
   "12345":{
     name:"Chocolate Biscuit",
     ingredients:"Milk, Wheat, Sugar",
-    allergens:["Milk","Gluten"],
+    allergens:["milk","gluten"],
     warning:"Contains Milk & Gluten"
   },
 
   "67890":{
     name:"Peanut Cookies",
     ingredients:"Peanut, Butter, Wheat",
-    allergens:["Peanut","Gluten"],
+    allergens:["peanut","gluten"],
     warning:"Danger for peanut allergy"
   }
+
+};
+
+// allergen icons
+const allergenIcons = {
+
+  milk:"🥛",
+  gluten:"🌾",
+  peanut:"🥜",
+  egg:"🥚",
+  fish:"🐟"
 
 };
 
@@ -99,9 +118,9 @@ if(product){
   product.allergens.forEach(item=>{
 
     html += `
-      <span class="badge">
-        ⚠️ ${item}
-      </span>
+      <div class="icon-box">
+        ${allergenIcons[item]}
+      </div>
     `;
 
   });
