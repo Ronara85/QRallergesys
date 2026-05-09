@@ -1,118 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>Allergen Product Viewer</title>
+<title>Allergen QR App</title>
 
-  <style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-    body{
-      font-family:Arial;
-      background:#f5f5f5;
-      padding:20px;
-    }
+<style>
 
-    .card{
-      max-width:500px;
-      margin:auto;
-      background:white;
-      padding:20px;
-      border-radius:15px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
 
-    h1{
-      margin-bottom:15px;
-    }
+body{
+  background:#f3f4f6;
+  padding:20px;
+}
 
-    .badge{
-      display:inline-block;
-      padding:8px 12px;
-      border-radius:20px;
-      margin:5px;
-      background:#fee2e2;
-      color:red;
-    }
+.container{
+  max-width:500px;
+  margin:auto;
+}
 
-  </style>
+.card{
+  background:white;
+  border-radius:25px;
+  padding:25px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
 
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo i{
+  color:#2563eb;
+  font-size:30px;
+}
+
+.logo h1{
+  font-size:28px;
+  font-weight:bold;
+}
+
+.help{
+  color:#2563eb;
+  font-size:18px;
+}
+
+.section-title{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.price-box{
+  width:100%;
+  padding:18px;
+  border:2px solid #e5e7eb;
+  border-radius:18px;
+  font-size:18px;
+  margin-bottom:30px;
+}
+
+.allergen-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.allergen-item{
+  background:white;
+  border:2px solid #e5e7eb;
+  border-radius:18px;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:0.3s;
+}
+
+.allergen-item:hover{
+  transform:scale(1.03);
+}
+
+.icon{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:16px;
+}
+
+.orange{background:#f59e0b;}
+.blue{background:#2563eb;}
+.sky{background:#0ea5e9;}
+.yellow{background:#eab308;}
+.brown{background:#92400e;}
+.green{background:#10b981;}
+.red{background:#ef4444;}
+.lime{background:#65a30d;}
+.purple{background:#a21caf;}
+.cyan{background:#06b6d4;}
+
+.allergen-name{
+  font-size:18px;
+  font-weight:500;
+}
+
+.add-btn{
+  margin-top:30px;
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:20px;
+  background:#2563eb;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.add-btn:hover{
+  background:#1d4ed8;
+}
+
+.scan-btn{
+  margin-top:20px;
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:20px;
+  background:#16a34a;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.product-box{
+  margin-top:25px;
+  background:#f9fafb;
+  border-radius:20px;
+  padding:20px;
+  display:none;
+}
+
+.product-box h2{
+  margin-bottom:10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:10px 15px;
+  background:#fee2e2;
+  color:#dc2626;
+  border-radius:50px;
+  margin:5px;
+  font-size:14px;
+}
+
+@media(max-width:500px){
+
+  .allergen-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
 </head>
+
 <body>
+
+<div class="container">
 
 <div class="card">
 
-  <h1 id="name"></h1>
+<div class="header">
 
-  <h3>Ingredients</h3>
-  <p id="ingredients"></p>
+<div class="logo">
+<i class="fa-solid fa-qrcode"></i>
+<h1>MyQRCode</h1>
+</div>
 
-  <h3>Allergens</h3>
-  <div id="allergens"></div>
+<div class="help">
+<i class="fa-regular fa-circle-question"></i>
+Help
+</div>
 
-  <h3>Warning</h3>
-  <p id="warning"></p>
+</div>
+
+<h2 class="section-title">Price</h2>
+
+<input
+type="text"
+class="price-box"
+placeholder="e.g. 10 €"
+/>
+
+<h2 class="section-title">Allergens present</h2>
+
+<div class="allergen-grid">
+
+<div class="allergen-item">
+<div class="icon orange">
+<i class="fa-solid fa-wheat-awn"></i>
+</div>
+<div class="allergen-name">Grain</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon blue">
+<i class="fa-solid fa-shrimp"></i>
+</div>
+<div class="allergen-name">Crustaceans</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon sky">
+<i class="fa-solid fa-fish"></i>
+</div>
+<div class="allergen-name">Fish</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon yellow">
+<i class="fa-solid fa-egg"></i>
+</div>
+<div class="allergen-name">Eggs</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon brown">
+<i class="fa-solid fa-peanut"></i>
+</div>
+<div class="allergen-name">Peanuts</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon orange">
+<i class="fa-solid fa-glass-water"></i>
+</div>
+<div class="allergen-name">Milk</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon yellow">
+<i class="fa-solid fa-seedling"></i>
+</div>
+<div class="allergen-name">Nuts</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon green">
+<i class="fa-solid fa-leaf"></i>
+</div>
+<div class="allergen-name">Celery</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon red">
+<i class="fa-solid fa-pepper-hot"></i>
+</div>
+<div class="allergen-name">Mustard</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon lime">
+<i class="fa-solid fa-seedling"></i>
+</div>
+<div class="allergen-name">Sesame</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon purple">
+<i class="fa-solid fa-flask"></i>
+</div>
+<div class="allergen-name">Sulfur</div>
+</div>
+
+<div class="allergen-item">
+<div class="icon cyan">
+<i class="fa-solid fa-water"></i>
+</div>
+<div class="allergen-name">Shellfish</div>
+</div>
+
+</div>
+
+<button class="add-btn">
++ Add New Product
+</button>
+
+<button class="scan-btn" onclick="showProduct()">
+Scan QR Product
+</button>
+
+<div class="product-box" id="productBox">
+
+<h2>Chocolate Biscuit</h2>
+
+<p>
+Contains:
+</p>
+
+<div class="badge">⚠️ Milk</div>
+<div class="badge">⚠️ Gluten</div>
+
+<p style="margin-top:15px;">
+Not safe for milk allergy users.
+</p>
+
+</div>
+
+</div>
 
 </div>
 
 <script>
 
-const products = {
+function showProduct(){
 
-  "12345":{
-    name:"Chocolate Biscuit",
-    ingredients:"Milk, Wheat, Sugar",
-    allergens:["Milk","Gluten"],
-    warning:"Contains Milk & Gluten"
-  },
-
-  "67890":{
-    name:"Peanut Cookies",
-    ingredients:"Peanut, Butter, Wheat",
-    allergens:["Peanut","Gluten"],
-    warning:"Danger for peanut allergy"
-  }
-
-};
-
-// URL eke id ganna
-const params = new URLSearchParams(window.location.search);
-
-const id = params.get("id");
-
-const product = products[id];
-
-if(product){
-
-  document.getElementById("name").innerText =
-    product.name;
-
-  document.getElementById("ingredients").innerText =
-    product.ingredients;
-
-  document.getElementById("warning").innerText =
-    product.warning;
-
-  let html = "";
-
-  product.allergens.forEach(item=>{
-
-    html += `
-      <span class="badge">
-        ⚠️ ${item}
-      </span>
-    `;
-
-  });
-
-  document.getElementById("allergens").innerHTML =
-    html;
-
-}else{
-
-  document.body.innerHTML =
-    "<h1>Product Not Found</h1>";
+  document.getElementById("productBox")
+  .style.display = "block";
 
 }
 
