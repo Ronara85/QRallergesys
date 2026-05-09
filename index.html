@@ -3,194 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Allergen Product Viewer</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
-
   <link rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-
+  <title>Allergen Product Viewer</title>
 
   <style>
 
-   *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
-}
+    body{
+      font-family:Arial;
+      background:#f5f5f5;
+      padding:20px;
+    }
 
-body{
-  background:#f3f4f6;
-}
-.topbar{
-  background:#202124;
-  color:white;
-  text-align:center;
-  padding:14px;
-  font-size:18px;
-}
-
-.container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo i{
-  color:#2563eb;
-  font-size:30px;
-}
-
-.logo h1{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.help{
-  color:#2563eb;
-  font-size:18px;
-}
-
-.card{
-  background:white;
-  border-radius:25px;
-  padding:20px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-}
-
-#reader{
-  width:100%;
-  overflow:hidden;
-  border-radius:20px;
-  margin-bottom:20px;
-}
-
-.product-title{
-  font-size:34px;
-  font-weight:bold;
-  margin-bottom:20px;
-}
-
-.section-title{
-  font-size:18px;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-
-.price-box{
-  width:100%;
-  padding:18px;
-  border:2px solid #e5e7eb;
-  border-radius:18px;
-  font-size:18px;
-  margin-bottom:25px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
-
-.item{
-  border:2px solid #e5e7eb;
-  border-radius:18px;
-  padding:15px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  background:white;
-}
-
-.icon{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:16px;
-}
-
-.orange{background:#f59e0b;}
-.blue{background:#2563eb;}
-.sky{background:#0ea5e9;}
-.yellow{background:#eab308;}
-.brown{background:#92400e;}
-.green{background:#10b981;}
-.red{background:#ef4444;}
-.lime{background:#65a30d;}
-.purple{background:#a21caf;}
-.cyan{background:#06b6d4;}
-
-.name{
-  font-size:18px;
-}
-
-.active{
-  border:2px solid #fb7185;
-  background:#fff1f2;
-}
-
-.active .check{
-  margin-left:auto;
-  color:#ef4444;
-}
-
-.scan-btn{
-  width:100%;
-  margin-top:25px;
-  padding:18px;
-  border:none;
-  border-radius:20px;
-  background:#2563eb;
-  color:white;
-  font-size:22px;
-  cursor:pointer;
-}
-
-.footer{
-  margin-top:20px;
-  display:flex;
-  justify-content:space-around;
-  padding:15px;
-  background:white;
-  border-top:1px solid #ddd;
-}
-
-.footer div{
-  text-align:center;
-  color:#64748b;
-}
-
-.footer i{
-  font-size:24px;
-  margin-bottom:5px;
-}
-
-@media(max-width:500px){
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-}
     .card{
       max-width:500px;
       margin:auto;
@@ -217,18 +41,7 @@ body{
 
 </head>
 <body>
-<div class="topbar">
-  myqrcode.com
-</div>
 
-<div class="container">
-
-<div class="header">
-
-<div class="logo">
-<i class="fa-solid fa-qrcode"></i>
-<h1>MyQRCode</h1>
-</div>
 <div class="card">
 
   <h1 id="name"></h1>
@@ -244,89 +57,33 @@ body{
 
 </div>
 
-
 <script>
 
 const products = {
 
-  "12345":{
+    "12345":{
     name:"Chocolate Biscuit",
     ingredients:"Milk, Wheat, Sugar",
     allergens:["Milk","Gluten"],
-    warning:"Contains Milk & Gluten"
+    warning:"Contains Milk & Gluten",
+    warning:<i class="fa-fish"></i>,
+    warning:<i class="fa-pepper-hot"></i>,
+    warning:<i class="fa-flask"></i>
   },
 
   "67890":{
     name:"Peanut Cookies",
     ingredients:"Peanut, Butter, Wheat",
     allergens:["Peanut","Gluten"],
-    warning:"Danger for peanut allergy"
+    warning:"Danger for peanut allergy",
+    warning:<i class="fa-wheat-awn"></i>,
+    warning: <i class="fa-seedling"></i>,
+    warning: <i class="fa-peanut"></i>,
+    warning:<i class="fa-egg"></i>
   }
 
 };
-const allergenData = {
 
-  "Grain":{
-    icon:"fa-wheat-awn",
-    color:"orange"
-  },
-
-  "Crustaceans":{
-    icon:"fa-shrimp",
-    color:"blue"
-  },
-
-  "Fish":{
-    icon:"fa-fish",
-    color:"sky"
-  },
-
-  "Eggs":{
-    icon:"fa-egg",
-    color:"yellow"
-  },
-
-  "Peanuts":{
-    icon:"fa-peanut",
-    color:"brown"
-  },
-
-  "Milk":{
-    icon:"fa-glass-water",
-    color:"orange"
-  },
-
-  "Nuts":{
-    icon:"fa-seedling",
-    color:"yellow"
-  },
-
-  "Celery":{
-    icon:"fa-leaf",
-    color:"green"
-  },
-
-  "Mustard":{
-    icon:"fa-pepper-hot",
-    color:"red"
-  },
-
-  "Sesame":{
-    icon:"fa-seedling",
-    color:"lime"
-  },
-
-  "Sulfur":{
-    icon:"fa-flask",
-    color:"purple"
-  },
-
-  "Shellfish":{
-    icon:"fa-water",
-    color:"cyan"
-  }
-
-};
 // URL eke id ganna
 const params = new URLSearchParams(window.location.search);
 
