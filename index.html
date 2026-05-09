@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MyQRCode - Allergen Scanner</title>
+  <title>Allergen Product Viewer</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<style>
 
-*{
+  <style>
+
+   *{
   margin:0;
   padding:0;
   box-sizing:border-box;
@@ -23,7 +24,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 body{
   background:#f3f4f6;
 }
-
 .topbar{
   background:#202124;
   color:white;
@@ -191,12 +191,32 @@ body{
   }
 
 }
+    .card{
+      max-width:500px;
+      margin:auto;
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
 
-</style>
+    h1{
+      margin-bottom:15px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:20px;
+      margin:5px;
+      background:#fee2e2;
+      color:red;
+    }
+
+  </style>
+
 </head>
-
 <body>
-
 <div class="topbar">
   myqrcode.com
 </div>
@@ -210,100 +230,27 @@ body{
 <h1>MyQRCode</h1>
 </div>
 
-<div class="help">
-<i class="fa-regular fa-circle-question"></i>
-Help
-</div>
 
-</div>
-
-<div class="card">
-
-<div id="reader"></div>
-
-<div id="productArea" style="display:none;">
-
-<div class="product-title" id="productName"></div>
-
-<h2 class="section-title">Price</h2>
-
-<input
-type="text"
-class="price-box"
-id="price"
-readonly
-/>
-
-<h2 class="section-title">
-Allergens present
-</h2>
-
-<div class="grid" id="allergenGrid"></div>
-
-</div>
-
-</div>
-
-<button class="scan-btn">
-<i class="fa-solid fa-qrcode"></i>
-Scan another QR Code
-</button>
-
-<div class="footer">
-
-<div>
-<i class="fa-solid fa-expand"></i>
-<div>Scan</div>
-</div>
-
-<div>
-<i class="fa-regular fa-clock"></i>
-<div>History</div>
-</div>
-
-<div>
-<i class="fa-solid fa-gear"></i>
-<div>Settings</div>
-</div>
-
-</div>
-
-</div>
 
 <script>
 
 const products = {
 
   "12345":{
-
     name:"Chocolate Biscuit",
-
-    price:"10 €",
-
-    allergens:[
-      "Milk",
-      "Peanuts",
-      "Eggs"
-    ]
-
+    ingredients:"Milk, Wheat, Sugar",
+    allergens:["Milk","Gluten"],
+    warning:"Contains Milk & Gluten"
   },
 
   "67890":{
-
-    name:"Sea Food Pizza",
-
-    price:"25 €",
-
-    allergens:[
-      "Fish",
-      "Shellfish",
-      "Milk"
-    ]
-
+    name:"Peanut Cookies",
+    ingredients:"Peanut, Butter, Wheat",
+    allergens:["Peanut","Gluten"],
+    warning:"Danger for peanut allergy"
   }
 
 };
-
 const allergenData = {
 
   "Grain":{
@@ -367,88 +314,45 @@ const allergenData = {
   }
 
 };
+// URL eke id ganna
+const params = new URLSearchParams(window.location.search);
 
-function renderProduct(product){
+const id = params.get("id");
 
-  document.getElementById("productArea")
-  .style.display = "block";
+const product = products[id];
 
-  document.getElementById("productName")
-  .innerText = product.name;
+if(product){
 
-  document.getElementById("price")
-  .value = product.price;
+  document.getElementById("name").innerText =
+    product.name;
+
+  document.getElementById("ingredients").innerText =
+    product.ingredients;
+
+  document.getElementById("warning").innerText =
+    product.warning;
 
   let html = "";
 
-  Object.keys(allergenData).forEach(item=>{
-
-    const data = allergenData[item];
-
-    const active =
-      product.allergens.includes(item)
-      ? "active"
-      : "";
-
-    const check =
-      product.allergens.includes(item)
-      ? `<i class="fa-solid fa-check check"></i>`
-      : "";
+  product.allergens.forEach(item=>{
 
     html += `
-
-    <div class="item ${active}">
-
-      <div class="icon ${data.color}">
-      <i class="fa-solid ${data.icon}"></i>
-      </div>
-
-      <div class="name">
-      ${item}
-      </div>
-
-      ${check}
-
-    </div>
-
+      <span class="badge">
+        ⚠️ ${item}
+      </span>
     `;
 
   });
 
-  document.getElementById("allergenGrid")
-  .innerHTML = html;
+  document.getElementById("allergens").innerHTML =
+    html;
+
+}else{
+
+  document.body.innerHTML =
+    "<h1>Product Not Found</h1>";
 
 }
-
-function onScanSuccess(decodedText){
-
-  if(products[decodedText]){
-
-    renderProduct(products[decodedText]);
-
-  }else{
-
-    alert("Product not found");
-
-  }
-
-}
-
-function onScanFailure(error){}
-
-const scanner = new Html5QrcodeScanner(
-  "reader",
-  {
-    fps:10,
-    qrbox:250
-  },
-  false
-);
-
-scanner.render(
-  onScanSuccess,
-  onScanFailure
-);
 
 </script>
 
