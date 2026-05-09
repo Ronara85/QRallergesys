@@ -3,10 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
 <title>Allergen Product Viewer</title>
 
 <style>
@@ -160,10 +157,7 @@ h1{
 </div>
 
 <script>
-.icon i{
-  font-size:22px;
-  color:white;
-}
+
 const products = {
 
   "12345":{
@@ -187,31 +181,31 @@ const products = {
 const allergenData = {
 
   milk:{
-    icon:'<i class="fa-solid fa-glass-water"></i>',
+    icon:"🥛",
     label:"Milk",
     class:"milk"
   },
 
   gluten:{
-    icon:'<i class="fa-solid fa-wheat-awn"></i>',
+    icon:"🌾",
     label:"Grain",
     class:"gluten"
   },
 
   peanut:{
-    icon:'<i class="fa-solid fa-seedling"></i>',
+    icon:"🥜",
     label:"Peanuts",
     class:"peanut"
   },
 
   egg:{
-    icon:'<i class="fa-solid fa-egg"></i>',
+    icon:"🥚",
     label:"Eggs",
     class:"egg"
   },
 
   fish:{
-    icon:'<i class="fa-solid fa-fish"></i>',
+    icon:"🐟",
     label:"Fish",
     class:"fish"
   }
@@ -243,21 +237,22 @@ if(product){
 
     const a = allergenData[item];
 
- html += `
+    html += `
 
-<div class="allergen-item">
+      <div class="allergen-item">
 
-  <div class="icon ${a.class}">
-    ${a.icon}
-  </div>
+        <div class="icon ${a.class}">
+          ${a.icon}
+        </div>
 
-  <div>
-    ${a.label}
-  </div>
+        <div>
+          ${a.label}
+        </div>
 
-</div>
+      </div>
 
-`;
+    `;
+
   });
 
   document.getElementById("allergens").innerHTML =
