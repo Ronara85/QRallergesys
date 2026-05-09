@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QR Allergen Scanner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <title>Allergen Product Viewer</title>
 
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
 
     body{
-      background:#f4f6f9;
+      font-family:Arial;
+      background:#f5f5f5;
       padding:20px;
     }
 
-    .container{
+    .card{
       max-width:500px;
       margin:auto;
       background:white;
@@ -30,31 +24,7 @@
     }
 
     h1{
-      text-align:center;
-      margin-bottom:20px;
-      color:#1e293b;
-    }
-
-    #reader{
-      width:100%;
-      margin-bottom:20px;
-    }
-
-    .product-card{
-      background:#f8fafc;
-      padding:15px;
-      border-radius:10px;
-      border:1px solid #ddd;
-      display:none;
-    }
-
-    .product-card h2{
-      margin-bottom:10px;
-      color:#0f172a;
-    }
-
-    .section{
-      margin-top:15px;
+      margin-bottom:15px;
     }
 
     .badge{
@@ -62,157 +32,89 @@
       padding:8px 12px;
       border-radius:20px;
       margin:5px;
-      font-size:14px;
-    }
-
-    .danger{
       background:#fee2e2;
-      color:#dc2626;
+      color:red;
     }
 
-    .safe{
-      background:#dcfce7;
-      color:#15803d;
-    }
-
-    .warning{
-      margin-top:15px;
-      padding:12px;
-      border-radius:10px;
-      background:#fef3c7;
-      color:#92400e;
-    }
-
-    .footer{
-      text-align:center;
-      margin-top:20px;
-      color:#64748b;
-      font-size:14px;
-    }
   </style>
-</head>
 
+</head>
 <body>
 
-<div class="container">
+<div class="card">
 
-  <h1>QR Allergen Scanner</h1>
+  <h1 id="name"></h1>
 
-  <div id="reader"></div>
+  <h3>Ingredients</h3>
+  <p id="ingredients"></p>
 
-  <div class="product-card" id="productCard">
+  <h3>Allergens</h3>
+  <div id="allergens"></div>
 
-    <h2 id="productName"></h2>
-
-    <div class="section">
-      <h3>Ingredients</h3>
-      <p id="ingredients"></p>
-    </div>
-
-    <div class="section">
-      <h3>Allergens</h3>
-      <div id="allergens"></div>
-    </div>
-
-    <div class="warning" id="warning"></div>
-
-  </div>
-
-  <div class="footer">
-    Scan product QR code to check allergens
-  </div>
+  <h3>Warning</h3>
+  <p id="warning"></p>
 
 </div>
 
 <script>
 
-  // Sample Product Database
-  const products = {
+const products = {
 
-    "12345": {
-      name: "Chocolate Biscuit",
-      ingredients: "Wheat Flour, Sugar, Milk Powder, Cocoa",
-      allergens: ["Milk", "Gluten"],
-      warning: "Contains milk and gluten."
-    },
+  "12345":{
+    name:"Chocolate Biscuit",
+    ingredients:"Milk, Wheat, Sugar",
+    allergens:["Milk","Gluten"],
+    warning:"Contains Milk & Gluten"
+  },
 
-    "67890": {
-      name: "Peanut Cookies",
-      ingredients: "Peanuts, Wheat Flour, Butter",
-      allergens: ["Peanut", "Milk", "Gluten"],
-      warning: "Not safe for peanut allergy."
-    },
-
-    "11111": {
-      name: "Fruit Juice",
-      ingredients: "Apple, Orange, Sugar",
-      allergens: [],
-      warning: "No major allergens detected."
-    }
-
-  };
-
-  function onScanSuccess(decodedText) {
-
-    const product = products[decodedText];
-
-    if(product){
-
-      document.getElementById("productCard").style.display = "block";
-
-      document.getElementById("productName").innerText = product.name;
-
-      document.getElementById("ingredients").innerText = product.ingredients;
-
-      document.getElementById("warning").innerText = product.warning;
-
-      const allergenDiv = document.getElementById("allergens");
-
-      allergenDiv.innerHTML = "";
-
-      if(product.allergens.length > 0){
-
-        product.allergens.forEach(item => {
-
-          allergenDiv.innerHTML += `
-            <span class="badge danger">
-              ⚠️ ${item}
-            </span>
-          `;
-
-        });
-
-      } else {
-
-        allergenDiv.innerHTML = `
-          <span class="badge safe">
-            ✅ Safe Product
-          </span>
-        `;
-      }
-
-    } else {
-
-      alert("Product not found!");
-
-    }
-
+  "67890":{
+    name:"Peanut Cookies",
+    ingredients:"Peanut, Butter, Wheat",
+    allergens:["Peanut","Gluten"],
+    warning:"Danger for peanut allergy"
   }
 
-  function onScanFailure(error) {
-    // ignore errors
-  }
+};
 
-  const html5QrcodeScanner = new Html5QrcodeScanner(
-    "reader",
-    {
-      fps: 10,
-      qrbox: 250
-    },
-    false
-  );
+// URL eke id ganna
+const params = new URLSearchParams(window.location.search);
 
-  html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+const id = params.get("id");
+
+const product = products[id];
+
+if(product){
+
+  document.getElementById("name").innerText =
+    product.name;
+
+  document.getElementById("ingredients").innerText =
+    product.ingredients;
+
+  document.getElementById("warning").innerText =
+    product.warning;
+
+  let html = "";
+
+  product.allergens.forEach(item=>{
+
+    html += `
+      <span class="badge">
+        ⚠️ ${item}
+      </span>
+    `;
+
+  });
+
+  document.getElementById("allergens").innerHTML =
+    html;
+
+}else{
+
+  document.body.innerHTML =
+    "<h1>Product Not Found</h1>";
+
+}
 
 </script>
 
