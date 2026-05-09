@@ -4,7 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Allergen QR App</title>
+<title>MyQRCode - Allergen Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -20,26 +22,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 body{
   background:#f3f4f6;
-  padding:20px;
+}
+
+.topbar{
+  background:#202124;
+  color:white;
+  text-align:center;
+  padding:14px;
+  font-size:18px;
 }
 
 .container{
   max-width:500px;
   margin:auto;
-}
-
-.card{
-  background:white;
-  border-radius:25px;
-  padding:25px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  padding:20px;
 }
 
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px;
+  margin-bottom:20px;
 }
 
 .logo{
@@ -63,8 +66,28 @@ body{
   font-size:18px;
 }
 
+.card{
+  background:white;
+  border-radius:25px;
+  padding:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+#reader{
+  width:100%;
+  overflow:hidden;
+  border-radius:20px;
+  margin-bottom:20px;
+}
+
+.product-title{
+  font-size:34px;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
 .section-title{
-  font-size:20px;
+  font-size:18px;
   font-weight:bold;
   margin-bottom:15px;
 }
@@ -75,33 +98,28 @@ body{
   border:2px solid #e5e7eb;
   border-radius:18px;
   font-size:18px;
-  margin-bottom:30px;
+  margin-bottom:25px;
 }
 
-.allergen-grid{
+.grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:15px;
+  gap:14px;
 }
 
-.allergen-item{
-  background:white;
+.item{
   border:2px solid #e5e7eb;
   border-radius:18px;
   padding:15px;
   display:flex;
   align-items:center;
   gap:12px;
-  transition:0.3s;
-}
-
-.allergen-item:hover{
-  transform:scale(1.03);
+  background:white;
 }
 
 .icon{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -121,65 +139,54 @@ body{
 .purple{background:#a21caf;}
 .cyan{background:#06b6d4;}
 
-.allergen-name{
+.name{
   font-size:18px;
-  font-weight:500;
 }
 
-.add-btn{
-  margin-top:30px;
+.active{
+  border:2px solid #fb7185;
+  background:#fff1f2;
+}
+
+.active .check{
+  margin-left:auto;
+  color:#ef4444;
+}
+
+.scan-btn{
   width:100%;
+  margin-top:25px;
   padding:18px;
   border:none;
   border-radius:20px;
   background:#2563eb;
   color:white;
-  font-size:20px;
+  font-size:22px;
   cursor:pointer;
-  transition:0.3s;
 }
 
-.add-btn:hover{
-  background:#1d4ed8;
-}
-
-.scan-btn{
+.footer{
   margin-top:20px;
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:20px;
-  background:#16a34a;
-  color:white;
-  font-size:20px;
-  cursor:pointer;
+  display:flex;
+  justify-content:space-around;
+  padding:15px;
+  background:white;
+  border-top:1px solid #ddd;
 }
 
-.product-box{
-  margin-top:25px;
-  background:#f9fafb;
-  border-radius:20px;
-  padding:20px;
-  display:none;
+.footer div{
+  text-align:center;
+  color:#64748b;
 }
 
-.product-box h2{
-  margin-bottom:10px;
-}
-
-.badge{
-  display:inline-block;
-  padding:10px 15px;
-  background:#fee2e2;
-  color:#dc2626;
-  border-radius:50px;
-  margin:5px;
-  font-size:14px;
+.footer i{
+  font-size:24px;
+  margin-bottom:5px;
 }
 
 @media(max-width:500px){
 
-  .allergen-grid{
+  .grid{
     grid-template-columns:1fr;
   }
 
@@ -190,9 +197,11 @@ body{
 
 <body>
 
-<div class="container">
+<div class="topbar">
+  myqrcode.com
+</div>
 
-<div class="card">
+<div class="container">
 
 <div class="header">
 
@@ -208,127 +217,53 @@ Help
 
 </div>
 
+<div class="card">
+
+<div id="reader"></div>
+
+<div id="productArea" style="display:none;">
+
+<div class="product-title" id="productName"></div>
+
 <h2 class="section-title">Price</h2>
 
 <input
 type="text"
 class="price-box"
-placeholder="e.g. 10 €"
+id="price"
+readonly
 />
 
-<h2 class="section-title">Allergens present</h2>
+<h2 class="section-title">
+Allergens present
+</h2>
 
-<div class="allergen-grid">
+<div class="grid" id="allergenGrid"></div>
 
-<div class="allergen-item">
-<div class="icon orange">
-<i class="fa-solid fa-wheat-awn"></i>
-</div>
-<div class="allergen-name">Grain</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon blue">
-<i class="fa-solid fa-shrimp"></i>
-</div>
-<div class="allergen-name">Crustaceans</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon sky">
-<i class="fa-solid fa-fish"></i>
-</div>
-<div class="allergen-name">Fish</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon yellow">
-<i class="fa-solid fa-egg"></i>
-</div>
-<div class="allergen-name">Eggs</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon brown">
-<i class="fa-solid fa-peanut"></i>
-</div>
-<div class="allergen-name">Peanuts</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon orange">
-<i class="fa-solid fa-glass-water"></i>
-</div>
-<div class="allergen-name">Milk</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon yellow">
-<i class="fa-solid fa-seedling"></i>
-</div>
-<div class="allergen-name">Nuts</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon green">
-<i class="fa-solid fa-leaf"></i>
-</div>
-<div class="allergen-name">Celery</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon red">
-<i class="fa-solid fa-pepper-hot"></i>
-</div>
-<div class="allergen-name">Mustard</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon lime">
-<i class="fa-solid fa-seedling"></i>
-</div>
-<div class="allergen-name">Sesame</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon purple">
-<i class="fa-solid fa-flask"></i>
-</div>
-<div class="allergen-name">Sulfur</div>
-</div>
-
-<div class="allergen-item">
-<div class="icon cyan">
-<i class="fa-solid fa-water"></i>
-</div>
-<div class="allergen-name">Shellfish</div>
 </div>
 
 </div>
 
-<button class="add-btn">
-+ Add New Product
+<button class="scan-btn">
+<i class="fa-solid fa-qrcode"></i>
+Scan another QR Code
 </button>
 
-<button class="scan-btn" onclick="showProduct()">
-Scan QR Product
-</button>
+<div class="footer">
 
-<div class="product-box" id="productBox">
+<div>
+<i class="fa-solid fa-expand"></i>
+<div>Scan</div>
+</div>
 
-<h2>Chocolate Biscuit</h2>
+<div>
+<i class="fa-regular fa-clock"></i>
+<div>History</div>
+</div>
 
-<p>
-Contains:
-</p>
-
-<div class="badge">⚠️ Milk</div>
-<div class="badge">⚠️ Gluten</div>
-
-<p style="margin-top:15px;">
-Not safe for milk allergy users.
-</p>
-
+<div>
+<i class="fa-solid fa-gear"></i>
+<div>Settings</div>
 </div>
 
 </div>
@@ -337,12 +272,183 @@ Not safe for milk allergy users.
 
 <script>
 
-function showProduct(){
+const products = {
 
-  document.getElementById("productBox")
+  "12345":{
+
+    name:"Chocolate Biscuit",
+
+    price:"10 €",
+
+    allergens:[
+      "Milk",
+      "Peanuts",
+      "Eggs"
+    ]
+
+  },
+
+  "67890":{
+
+    name:"Sea Food Pizza",
+
+    price:"25 €",
+
+    allergens:[
+      "Fish",
+      "Shellfish",
+      "Milk"
+    ]
+
+  }
+
+};
+
+const allergenData = {
+
+  "Grain":{
+    icon:"fa-wheat-awn",
+    color:"orange"
+  },
+
+  "Crustaceans":{
+    icon:"fa-shrimp",
+    color:"blue"
+  },
+
+  "Fish":{
+    icon:"fa-fish",
+    color:"sky"
+  },
+
+  "Eggs":{
+    icon:"fa-egg",
+    color:"yellow"
+  },
+
+  "Peanuts":{
+    icon:"fa-peanut",
+    color:"brown"
+  },
+
+  "Milk":{
+    icon:"fa-glass-water",
+    color:"orange"
+  },
+
+  "Nuts":{
+    icon:"fa-seedling",
+    color:"yellow"
+  },
+
+  "Celery":{
+    icon:"fa-leaf",
+    color:"green"
+  },
+
+  "Mustard":{
+    icon:"fa-pepper-hot",
+    color:"red"
+  },
+
+  "Sesame":{
+    icon:"fa-seedling",
+    color:"lime"
+  },
+
+  "Sulfur":{
+    icon:"fa-flask",
+    color:"purple"
+  },
+
+  "Shellfish":{
+    icon:"fa-water",
+    color:"cyan"
+  }
+
+};
+
+function renderProduct(product){
+
+  document.getElementById("productArea")
   .style.display = "block";
 
+  document.getElementById("productName")
+  .innerText = product.name;
+
+  document.getElementById("price")
+  .value = product.price;
+
+  let html = "";
+
+  Object.keys(allergenData).forEach(item=>{
+
+    const data = allergenData[item];
+
+    const active =
+      product.allergens.includes(item)
+      ? "active"
+      : "";
+
+    const check =
+      product.allergens.includes(item)
+      ? `<i class="fa-solid fa-check check"></i>`
+      : "";
+
+    html += `
+
+    <div class="item ${active}">
+
+      <div class="icon ${data.color}">
+      <i class="fa-solid ${data.icon}"></i>
+      </div>
+
+      <div class="name">
+      ${item}
+      </div>
+
+      ${check}
+
+    </div>
+
+    `;
+
+  });
+
+  document.getElementById("allergenGrid")
+  .innerHTML = html;
+
 }
+
+function onScanSuccess(decodedText){
+
+  if(products[decodedText]){
+
+    renderProduct(products[decodedText]);
+
+  }else{
+
+    alert("Product not found");
+
+  }
+
+}
+
+function onScanFailure(error){}
+
+const scanner = new Html5QrcodeScanner(
+  "reader",
+  {
+    fps:10,
+    qrbox:250
+  },
+  false
+);
+
+scanner.render(
+  onScanSuccess,
+  onScanFailure
+);
 
 </script>
 
